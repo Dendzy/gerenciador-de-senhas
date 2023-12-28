@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.*;
 
 public class CentralContas implements CentralInterface {
     private ArrayList<Conta> contas;
@@ -9,6 +10,7 @@ public class CentralContas implements CentralInterface {
 
     public CentralContas () {
         this.contas = new ArrayList<>();
+        carregarSenhasDeArquivo("senhas.dat");
     }
 
     @Override
@@ -57,4 +59,26 @@ public class CentralContas implements CentralInterface {
         return listaDeContasNoSite;
     }
 
+    public void salvarSenhas() {
+        salvarSenhasEmArquivo("senhas.dat");
+    }
+
+    private void salvarSenhasEmArquivo(String nomeArquivo) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            outputStream.writeObject(contas);
+            System.out.println("Senhas salvas com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar as senhas: " + e.getMessage());
+        }
+    }
+
+    private void carregarSenhasDeArquivo(String nomeArquivo) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+            contas = (ArrayList<Conta>) inputStream.readObject();
+            System.out.println("Senhas carregadas com sucesso!");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar as senhas: " + e.getMessage());
+            contas = new ArrayList<>();
+        }
+    }
 }

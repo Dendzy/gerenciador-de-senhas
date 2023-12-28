@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Conta {
+public class Conta implements Serializable{
     private String site;
     private String email;
     private String senha;
